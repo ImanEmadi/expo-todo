@@ -1,18 +1,13 @@
 import { Text, View } from "react-native";
-import { useEffect } from 'react'
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "hooks/useTheme";
 
 export default function Setting() {
 
-    useEffect(() => {
-        AsyncStorage.getItem('theme').then(res => {
-            console.log(res);
-        })
-    }, [])
+    const themeMap = useTheme();
 
     return <>
-        <View style={{ backgroundColor: '#141d2b', flex: 1 }}>
-            <Text>
+        <View style={{ backgroundColor: themeMap.bodyBG, flex: 1 }}>
+            <Text style={{ color: themeMap.bodyFC }}>
                 THIS IS SETTING
             </Text>
         </View>

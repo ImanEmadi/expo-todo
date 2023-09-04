@@ -1,10 +1,14 @@
+import { useTheme } from "hooks/useTheme";
 import { StyleSheet, Text, View } from "react-native";
 import { darkTheme } from "resources/theme.styles";
 
 export default function Home() {
+
+    const themeMap = useTheme();
+
     return <>
-        <View style={{ ...styles.homeView }}>
-            <Text style={{ color: darkTheme.bodyFC }}>
+        <View style={{ ...styles.homeView, backgroundColor: themeMap.bodyBG }}>
+            <Text style={{ color: themeMap.bodyFC }}>
                 Home Screen
             </Text>
         </View>
