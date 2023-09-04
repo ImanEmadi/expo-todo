@@ -1,30 +1,42 @@
 {
-  "expo": {
-    "name": "todo",
-    "slug": "todo",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+  "name": "todo",
+  "slug": "todo",
+  "version": "1.0.0",
+  "orientation": "portrait",
+  "icon": "./assets/icon.png",
+  "userInterfaceStyle": "light",
+  "scheme": "todo",
+  "experiments": {
+    "tsconfigPaths": true
+  },
+  "extra": {
+    "eas": {
+      "projectId": "683c40ee-d7c2-456e-a350-2ff17911c57b"
+    }
+  },
+  "plugins": [
+    "expo-router"
+  ],
+  "splash": {
+    "image": "./assets/splash.png",
+    "resizeMode": "contain",
+    "backgroundColor": "#ffffff"
+  },
+  "assetBundlePatterns": [
+    "**/*"
+  ],
+  "ios": {
+    "supportsTablet": true
+  },
+  "android": {
+    "permissions": [],
+    "adaptiveIcon": {
+      "foregroundImage": "./assets/adaptive-icon.png",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
-  }
+    "package": "app.ie.todo"
+  },
+  "web": {
+    "favicon": "./assets/favicon.png"
+  },
 }

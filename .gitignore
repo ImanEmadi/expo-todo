@@ -33,3 +33,10 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+
+
+# customs
+
+yarn.lock
+android
