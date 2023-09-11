@@ -1,9 +1,11 @@
 import { StyleSheet } from "react-native";
 
 
-export const fontSizes = {
+export const _Font_Sizes = {
     h3: 25,
-    normal: 15
+    headerBtn: 20,
+    normal: 15,
+    bottomTabTitle: 17
 }
 
 export const globalStyles = StyleSheet.create({

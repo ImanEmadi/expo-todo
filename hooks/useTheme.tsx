@@ -1,4 +1,4 @@
-import { darkTheme, lightTheme } from "resources/theme.styles";
+import { darkTheme, lightTheme } from "resources/styles/theme.styles";
 import { useAppStore } from "store/app.store"
 import { ThemeMap } from "types/app.types";
 

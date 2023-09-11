@@ -39,3 +39,5 @@ yarn-error.*
 # customs
 yarn.lock
 android
+.vscode
+.git

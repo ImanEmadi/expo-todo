@@ -1,26 +1,9 @@
-import { useTheme } from "hooks/useTheme";
-import { StyleSheet, Text, View } from "react-native";
-import { darkTheme } from "resources/theme.styles";
+import { Home } from "screens/home";
 
-export default function Home() {
-
-    const themeMap = useTheme();
-
+export default function () {
     return <>
-        <View style={{ ...styles.homeView, backgroundColor: themeMap.bodyBG }}>
-            <Text style={{ color: themeMap.bodyFC }}>
-                Home Screen
-            </Text>
-        </View>
+        <Home />
     </>;
 }
 
 
-
-const styles = StyleSheet.create({
-    homeView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignContent: 'center'
-    }
-})
