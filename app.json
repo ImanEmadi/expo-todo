@@ -15,7 +15,21 @@
     }
   },
   "plugins": [
-    "expo-router"
+    "expo-router",
+    [
+      "expo-image-picker",
+      {
+        "photosPermission": "The app requires access to images."
+      }
+    ],
+    [
+      "expo-media-library",
+      {
+        "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+        "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+        "isAccessMediaLocationEnabled": false
+      }
+    ]
   ],
   "splash": {
     "image": "./assets/splash.png",
@@ -26,7 +40,8 @@
     "**/*"
   ],
   "ios": {
-    "supportsTablet": true
+    "supportsTablet": true,
+    "infoPlist": {}
   },
   "android": {
     "permissions": [],

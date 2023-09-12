@@ -5,12 +5,12 @@ import { Asset } from "expo-asset";
 import { useTheme } from "hooks/useTheme";
 import { usePathname, useRouter } from "expo-router";
 import Constants from 'expo-constants';
-import { MAIN_HEADER_HEIGHT, SETTINGS_PATH } from "constants/app.constants";
+import { MAIN_HEADER_HEIGHT, PATH_SETTINGS } from "constants/app.constants";
 import { _Font_Sizes } from "resources/styles/global.styles";
 
 const asset = Asset.fromModule(require('./../../../static/images/logo.png'));
-
 const iconWidth = 50;
+
 export default function MainHeader() {
 
     const [headerBtnPressed, setHeaderBtnPressed] = useState(false);
@@ -26,7 +26,7 @@ export default function MainHeader() {
             borderColor: themeMap.headerBorder
         }}>
             <View style={{ flex: 1, padding: 8, alignItems: 'center' }}>
-                <Pressable style={{ width: iconWidth }} onPress={e => router.replace('/')}>
+                <Pressable style={{ width: iconWidth }} onPress={e => router.push('/')}>
                     <Image
                         style={{ width: iconWidth, height: iconWidth }}
                         source={{ uri: asset.uri }}
@@ -38,11 +38,11 @@ export default function MainHeader() {
                     style={{ ...styles.headerBtnPressable }}
                     onPressIn={e => setHeaderBtnPressed(true)}
                     onPressOut={e => setHeaderBtnPressed(false)}
-                    onPress={e => router.push(SETTINGS_PATH)}
+                    onPress={e => router.push(PATH_SETTINGS)}
                 >
                     <Text style={{
                         color: headerBtnPressed ? themeMap.headerFCSecondary : themeMap.headerFC,
-                        backgroundColor: pathname === SETTINGS_PATH ? themeMap.headerBGActive : 'transparent',
+                        backgroundColor: pathname === PATH_SETTINGS ? themeMap.headerBGActive : 'transparent',
                         ...styles.headerBtnText
                     }}>
                         Setting

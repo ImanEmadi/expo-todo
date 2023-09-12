@@ -6,6 +6,7 @@ import { darkTheme } from 'resources/styles/theme.styles';
 import { AppShell } from 'screens/app';
 import { useTheme } from 'hooks/useTheme';
 import { _Font_Sizes } from 'resources/styles/global.styles';
+import { ScreenProps } from 'expo-router/build/useScreens';
 
 export default function RootLayout() {
 
@@ -43,12 +44,22 @@ export default function RootLayout() {
                     <Tabs.Screen
                         name="index"
                         options={{
-                            title: "New Todo",
+                            title: "Home",
                             href: "/",
                             tabBarItemStyle: {
-                                borderRightWidth: 1,
+                                ...tabsBorderRightOptions,
                                 borderColor: themeMap.bottomTabBorder,
-                                borderStyle: 'solid'
+                            }
+                        }}
+                    />
+                    <Tabs.Screen
+                        name="newTodo"
+                        options={{
+                            title: "New Todo",
+                            href: null,
+                            tabBarItemStyle: {
+                                ...tabsBorderRightOptions,
+                                borderColor: themeMap.bottomTabBorder,
                             }
                         }}
                     />
@@ -69,8 +80,18 @@ export default function RootLayout() {
 }
 
 
+
+
 const styles = StyleSheet.create({
     layoutView: {
         flex: 1
     }
 })
+
+
+const tabsBorderRightOptions: ScreenProps['options'] = {
+    tabBarItemStyle: {
+        borderRightWidth: 1,
+        borderStyle: 'solid'
+    }
+}

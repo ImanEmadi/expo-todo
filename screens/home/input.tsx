@@ -1,3 +1,5 @@
+import { PATH_NEW_TODO } from "constants/app.constants";
+import { router } from "expo-router";
 import { useTheme } from "hooks/useTheme";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -18,6 +20,7 @@ export const TODOHomeInput = () => {
                     }}
                     onPressIn={e => setIsPressed(true)}
                     onPressOut={e => setIsPressed(false)}
+                    onPress={e => router.push(PATH_NEW_TODO)}
                 >
                     <Text style={{ ...styles.mainText, color: theme.bodyFC }}>
                         Create New TODO

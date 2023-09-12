@@ -1,4 +1,4 @@
-
+import { Asset } from 'expo-media-library';
 
 
 export interface TODO {
@@ -10,4 +10,6 @@ export interface TODO {
     images: TODO_Image[]
 }
 
-export type TODO_Image = string;
+export type TODO_Image = Pick<Asset, 'id' | 'filename' | 'height' | 'width' | 'uri'>;
+
+export type TODOData = TODO[];

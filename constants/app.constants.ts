@@ -4,15 +4,18 @@ import { AppTheme } from "types/app.types";
 export const validAppThemes: AppTheme[] = ['dark', 'light'];
 export const DEFAULT_APP_THEME: AppTheme = 'dark';
 
-//** ROUTES */
-export const SETTINGS_PATH = '/settings'
+//** EXPO */
 
+export const MEDIA_ALBUM_NAME = "Todos Album";
+
+//** ROUTES */
+export const PATH_SETTINGS = '/settings'
+export const PATH_NEW_TODO = '/newTodo';
 
 //*  AsyncStorage keys
 
 export const ASK_APP_THEME = 'theme';
-
-
+export const ASK_TODO_DATA = 'todo_data';
 
 
 //** VALUES */
