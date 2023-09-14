@@ -21,3 +21,7 @@ export const ASK_TODO_DATA = 'todo_data';
 //** VALUES */
 
 export const MAIN_HEADER_HEIGHT = 66;
+
+// Literally Constants:
+
+export const DAY = 1e5 * 36 * 24;

@@ -4,9 +4,7 @@ import { useTheme } from "hooks/useTheme";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-
-
-export const TODOHomeInput = () => {
+export const NewTodoButton = () => {
 
     const theme = useTheme();
     const [isPressed, setIsPressed] = useState(false);
@@ -31,12 +29,9 @@ export const TODOHomeInput = () => {
     </>;
 }
 
-
-
-
 const styles = StyleSheet.create({
     container: {
-        height: 300,
+        height: 200,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -47,4 +42,4 @@ const styles = StyleSheet.create({
         padding: 20,
         lineHeight: 40
     }
-})
+});

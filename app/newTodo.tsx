@@ -1,4 +1,4 @@
-import { NewTodo } from "screens/new todo/newTodo";
+import { NewTodo } from "components/new todo/newTodo";
 
 
 export default function () {

@@ -8,9 +8,8 @@ import { Image } from "expo-image";
 import * as MediaLibrary from 'expo-media-library';
 import { MEDIA_ALBUM_NAME } from "constants/app.constants";
 import { TODO, TODO_Image } from "types/data.types";
-import { getTODOData, saveTODOData } from "helpers/todo";
+import { getTODOData, saveTODOData } from "helpers/todo.utils";
 import { generateTODOId } from "helpers/generators";
-
 
 type TextData = Pick<TODO, 'title' | 'description'>;
 export const NewTodo = () => {
@@ -93,6 +92,7 @@ export const NewTodo = () => {
                 id: generateTODOId(),
                 created: Date.now(),
                 title: textData.title,
+                autoDel: true,
                 expires: 0,
                 description: textData.description,
                 images: todo_images
