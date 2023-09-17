@@ -10,6 +10,7 @@ import { MEDIA_ALBUM_NAME } from "constants/app.constants";
 import { TODO, TODO_Image } from "types/data.types";
 import { getTODOData, saveTODOData } from "helpers/todo.utils";
 import { generateTODOId } from "helpers/generators";
+import { RNDatePicker, RNDateTimePickerOnChange } from "components/common/Datepicker/RNDatepicker";
 
 type TextData = Pick<TODO, 'title' | 'description'>;
 export const NewTodo = () => {
@@ -22,6 +23,8 @@ export const NewTodo = () => {
         title: '',
         description: ''
     });
+    const [expiry, setExpiry] = useState(0);
+    const [showDP, setshowDP] = useState(false)
 
     const handleTextInputs = useCallback<(v: string, k: keyof TextData) => void>((v, k) => {
         setTextData(d => ({ ...d, [k]: v }));
@@ -104,6 +107,11 @@ export const NewTodo = () => {
     }, [assets, addToAlbum, textData])
 
 
+    const handleDate = useCallback<RNDateTimePickerOnChange>((e, d) => {
+        if (e.type !== 'set' || typeof d === 'undefined') return;
+        setExpiry(d.getTime());
+    }, [setExpiry]);
+
     return (
         <>
             <View style={{ ...styles.container, backgroundColor: themeMap.bodyBG }}>
@@ -179,6 +187,8 @@ export const NewTodo = () => {
                                 </Pressable>
                             </View>
                         </View>
+                        {/* end form */}
+                        <RNDatePicker onChange={handleDate} />
                     </View>
                     {/* end form box */}
                     <View style={{ ...styles.imagesBox }}>

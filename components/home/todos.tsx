@@ -33,14 +33,14 @@ const RenderItem = ({ item: { title, description, expires } }: { item: TODO }) =
             <Pressable
                 style={({ pressed }) => ({
                     ...styles.todoPressable,
-                    backgroundColor: pressed ? theme.bodyBGShadeActive : theme.bodyBGShade,
+                    backgroundColor: pressed ? theme.bodyContentBGActiveBlue : theme.bodyContentBGBlue,
                 })}
             >
                 <View style={{ ...styles.subViews }}>
                     <Text
                         style={{
                             fontSize: _Font_Sizes.cardTitle,
-                            color: theme.bodyHeaderFC,
+                            color: theme.bodyContentFCTitleBlue,
                         }}
                     >
                         {title}
