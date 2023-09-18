@@ -10,7 +10,7 @@ import { MEDIA_ALBUM_NAME } from "constants/app.constants";
 import { TODO, TODO_Image } from "types/data.types";
 import { getTODOData, saveTODOData } from "helpers/todo.utils";
 import { generateTODOId } from "helpers/generators";
-import { RNDatePicker, RNDateTimePickerOnChange } from "components/common/Datepicker/RNDatepicker";
+import { RNDTPicker, RNDateTimePickerOnChange } from "components/common/Datepicker/RNDatepicker";
 
 type TextData = Pick<TODO, 'title' | 'description'>;
 export const NewTodo = () => {
@@ -18,33 +18,49 @@ export const NewTodo = () => {
     const themeMap = useTheme();
     const { width, height } = useWindowDimensions();
     const [assets, setAssets] = useState<ImagePicker.ImagePickerAsset[]>([]);
-    const [mediaLibraryPermission] = ImagePicker.useMediaLibraryPermissions();
     const [textData, setTextData] = useState<TextData>({
         title: '',
         description: ''
     });
     const [expiry, setExpiry] = useState(0);
-    const [showDP, setshowDP] = useState(false)
+    const [showDP, setShowDP] = useState(false);
 
     const handleTextInputs = useCallback<(v: string, k: keyof TextData) => void>((v, k) => {
         setTextData(d => ({ ...d, [k]: v }));
     }, [setTextData]);
 
     const askPermissions = useCallback<() => Promise<boolean>>(async () => {
-        if (mediaLibraryPermission === null) return false;
+        const ip_per_check = await ImagePicker.getMediaLibraryPermissionsAsync();
 
-        if (mediaLibraryPermission.granted) return true;
-        if (!mediaLibraryPermission.canAskAgain) return false;
+        if (!ip_per_check.granted) {
+            const ip_per = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (!ip_per.granted) {
+                alert("Requires: Permission to access Media Library for: ImagePicker");
+                return false;
+            }
+        }
 
-        const per = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (await MediaLibrary.isAvailableAsync() === false) {
+            alert("Media Library API is not enabled on your device!");
+            return false;
+        }
+
+        const a = await MediaLibrary.getPermissionsAsync();
+        if (a.granted) return true;
+
+        const per = await MediaLibrary.requestPermissionsAsync();
         if (per.granted) return true;
-        return false;
-    }, [mediaLibraryPermission])
+        else {
+            alert("App requires permission to access Media Library");
+            return false;
+        }
+
+    }, []);
 
     const pickImages = useCallback(
         async () => {
             const per = await askPermissions();
-            if (!per) return alert('Requiring permission to access photos');
+            if (!per) return;
 
             const result = await ImagePicker.launchImageLibraryAsync({
                 allowsMultipleSelection: true,
@@ -57,63 +73,75 @@ export const NewTodo = () => {
         }, [setAssets, askPermissions]);
 
     const addToAlbum = useCallback(async (asts: MediaLibrary.Asset[], album: MediaLibrary.Album) => {
-        const _r = await MediaLibrary.addAssetsToAlbumAsync(asts, album);
-        if (!_r) alert("failed to save assets to the album!");
-        return _r;
+        try {
+            const _r = await MediaLibrary.addAssetsToAlbumAsync(asts, album);
+            if (!_r) throw new Error();
+            return _r;
+        } catch (error) {
+            alert("failed to save assets to the album!");
+        }
     }, []);
 
     const addTodo = useCallback(async () => {
         const todo_images: TODO_Image[] = [];
 
         if (assets.length) {
-            const album = await MediaLibrary.getAlbumAsync(MEDIA_ALBUM_NAME);
-            const _createdAssets = await new Promise<MediaLibrary.Asset[]>(async r => {
-                //? creating asset from the selected media
-                const new_asts: MediaLibrary.Asset[] = [];
-                for (const ip_ast of assets)
-                    new_asts.push(await MediaLibrary.createAssetAsync(ip_ast.uri));
-                r(new_asts);
-            });
+            try {
 
-            if (!album) {
-                //? Creating the album, by adding an asset to it.
-                const _album = await MediaLibrary.createAlbumAsync(MEDIA_ALBUM_NAME, _createdAssets[0]);
-                if (_createdAssets.length > 1) {
-                    addToAlbum(_createdAssets.slice(1), _album);
+                const album = await MediaLibrary.getAlbumAsync(MEDIA_ALBUM_NAME);
+                const _createdAssets = await new Promise<MediaLibrary.Asset[]>(async r => {
+                    //? creating asset from the selected media
+                    const new_asts: MediaLibrary.Asset[] = [];
+                    for (const ip_ast of assets)
+                        new_asts.push(await MediaLibrary.createAssetAsync(ip_ast.uri));
+                    r(new_asts);
+                });
+
+                if (!album) {
+                    //? Creating the album, by adding an asset to it.
+                    const _album = await MediaLibrary.createAlbumAsync(MEDIA_ALBUM_NAME, _createdAssets[0]);
+                    if (_createdAssets.length > 1) {
+                        addToAlbum(_createdAssets.slice(1), _album);
+                    }
+                } else {
+                    addToAlbum(_createdAssets, album);
                 }
-            } else {
-                addToAlbum(_createdAssets, album);
+
+                //? populate `todo_images` with the info from created assets
+                _createdAssets.forEach(({ id, width, height, filename, uri }) => todo_images.push({
+                    id, width, height, filename, uri
+                }));
+
+                const todo_data = await getTODOData();
+                todo_data.push({
+                    id: generateTODOId(),
+                    created: Date.now(),
+                    title: textData.title,
+                    autoDel: true,
+                    expires: 0,
+                    description: textData.description,
+                    images: todo_images
+                });
+
+                await saveTODOData(todo_data);
+
+            } catch (error) {
+                console.error(error);
             }
-
-            //? populate `todo_images` with the info from created assets
-            _createdAssets.forEach(({ id, width, height, filename, uri }) => todo_images.push({
-                id, width, height, filename, uri
-            }));
-
-            const todo_data = await getTODOData();
-            todo_data.push({
-                id: generateTODOId(),
-                created: Date.now(),
-                title: textData.title,
-                autoDel: true,
-                expires: 0,
-                description: textData.description,
-                images: todo_images
-            });
-
-            await saveTODOData(todo_data);
         }
 
     }, [assets, addToAlbum, textData])
 
-
     const handleDate = useCallback<RNDateTimePickerOnChange>((e, d) => {
-        if (e.type !== 'set' || typeof d === 'undefined') return;
-        setExpiry(d.getTime());
-    }, [setExpiry]);
+        console.log(e, d)
+        if (e.type === 'set' && typeof d !== 'undefined')
+            setExpiry(d.getTime());
+        setShowDP(false);
+    }, [setExpiry, setShowDP]);
 
     return (
         <>
+            <RNDTPicker show={showDP} onChange={handleDate} />
             <View style={{ ...styles.container, backgroundColor: themeMap.bodyBG }}>
                 <ScrollView>
                     <View style={{ ...styles.header }}>
@@ -128,6 +156,7 @@ export const NewTodo = () => {
                             style={{ ...styles.form, backgroundColor: themeMap.formBG }}
                         >
                             <TextInput
+                                cursorColor={themeMap.formInputFC}
                                 placeholderTextColor={themeMap.formInputFCPlaceHolder}
                                 style={{
                                     ...styles.textInputs,
@@ -138,6 +167,7 @@ export const NewTodo = () => {
                                 onChangeText={v => handleTextInputs(v, 'title')}
                             />
                             <TextInput
+                                cursorColor={themeMap.formInputFC}
                                 placeholderTextColor={themeMap.formInputFCPlaceHolder}
                                 style={{
                                     ...styles.textInputs,
@@ -147,6 +177,19 @@ export const NewTodo = () => {
                                 placeholder="Description"
                                 onChangeText={v => handleTextInputs(v, 'description')}
                             />
+                            {/* Displays DatePicker selected value */}
+                            <Pressable onPress={e => setShowDP(true)} style={{ ...styles.datePickerInputPressable }}>
+                                <TextInput
+                                    editable={false}
+                                    cursorColor={themeMap.formInputFC}
+                                    style={{
+                                        ...styles.datePickerInput,
+                                        borderColor: themeMap.formInputBorder,
+                                        color: themeMap.formInputFC,
+                                    }}
+                                    value={(new Date(expiry)).toString()}
+                                />
+                            </Pressable>
                             <View style={{ alignItems: "center", marginTop: 15 }}>
                                 <Pressable
                                     onPress={pickImages}
@@ -188,7 +231,6 @@ export const NewTodo = () => {
                             </View>
                         </View>
                         {/* end form */}
-                        <RNDatePicker onChange={handleDate} />
                     </View>
                     {/* end form box */}
                     <View style={{ ...styles.imagesBox }}>
@@ -237,6 +279,13 @@ const styles = StyleSheet.create({
         marginTop: 10,
         padding: 5,
         fontSize: _Font_Sizes.textInput
+    },
+    datePickerInputPressable: {},
+    datePickerInput: {
+        padding: 5,
+        fontSize: _Font_Sizes.textInput,
+        borderBottomWidth: 1,
+        borderStyle: 'solid',
     },
     formBtnBox: {
         borderWidth: 1,

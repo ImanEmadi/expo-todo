@@ -12,16 +12,16 @@ export interface RNDatePickerProps extends Partial<RNDateTimePickerProps> {
     show?: boolean
 }
 
-export const RNDatePicker = ({ show = false, ...props }: RNDatePickerProps) => {
+export const RNDTPicker = ({ show = false, ...props }: RNDatePickerProps) => {
     return <>
         {show &&
-            <RNDateTimePicker
-                mode="time"
+            (<RNDateTimePicker
+                mode="datetime"
                 display="default"
                 value={new Date()}
                 minimumDate={new Date()}
                 {...props}
-            />
+            />)
         }
     </>;
 }

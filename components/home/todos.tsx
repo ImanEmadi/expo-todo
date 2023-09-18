@@ -2,7 +2,7 @@ import { useFocusEffect } from "expo-router";
 import { getTODOData, getTodoExpiryStatus, getTodoExpiryStatusCode } from "helpers/todo.utils";
 import { useTheme } from "hooks/useTheme";
 import { useCallback, useMemo, useState } from "react";
-import { Pressable, StyleSheet, Text, View, VirtualizedList } from "react-native"
+import { Pressable, StyleSheet, Text, View } from "react-native"
 import { _Font_Sizes } from "resources/styles/global.styles";
 import { TODO } from "types/data.types";
 
