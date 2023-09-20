@@ -1,5 +1,5 @@
 import { useTheme } from "hooks/useTheme";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { View, StyleSheet, Text, ScrollView, Pressable, useWindowDimensions } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { _Font_Sizes } from "resources/styles/global.styles";
@@ -10,7 +10,7 @@ import { MEDIA_ALBUM_NAME } from "constants/app.constants";
 import { TODO, TODO_Image } from "types/data.types";
 import { getTODOData, saveTODOData } from "helpers/todo.utils";
 import { generateTODOId } from "helpers/generators";
-import { RNDTPicker, RNDateTimePickerOnChange } from "components/common/Datepicker/RNDatepicker";
+import { RNDTPicker, RNDateTimePickerOnChange, RNDateTimePickerProps } from "components/common/Datepicker/RNDatepicker";
 
 type TextData = Pick<TODO, 'title' | 'description'>;
 export const NewTodo = () => {
@@ -22,8 +22,7 @@ export const NewTodo = () => {
         title: '',
         description: ''
     });
-    const [expiry, setExpiry] = useState(0);
-    const [showDP, setShowDP] = useState(false);
+    const [expiryDate, setExpiryDate] = useState(0);
 
     const handleTextInputs = useCallback<(v: string, k: keyof TextData) => void>((v, k) => {
         setTextData(d => ({ ...d, [k]: v }));
@@ -85,6 +84,9 @@ export const NewTodo = () => {
     const addTodo = useCallback(async () => {
         const todo_images: TODO_Image[] = [];
 
+        if (!textData.title.length || !textData.description.length)
+            return alert("Inputs can not be empty");
+
         if (assets.length) {
             try {
 
@@ -132,18 +134,10 @@ export const NewTodo = () => {
 
     }, [assets, addToAlbum, textData])
 
-    const handleDate = useCallback<RNDateTimePickerOnChange>((e, d) => {
-        console.log(e, d)
-        if (e.type === 'set' && typeof d !== 'undefined')
-            setExpiry(d.getTime());
-        setShowDP(false);
-    }, [setExpiry, setShowDP]);
-
     return (
         <>
-            <RNDTPicker show={showDP} onChange={handleDate} />
             <View style={{ ...styles.container, backgroundColor: themeMap.bodyBG }}>
-                <ScrollView>
+                <ScrollView keyboardShouldPersistTaps={'always'}>
                     <View style={{ ...styles.header }}>
                         <Text
                             style={{ ...styles.headerText, color: themeMap.bodyHeaderFC }}
@@ -155,6 +149,7 @@ export const NewTodo = () => {
                         <View
                             style={{ ...styles.form, backgroundColor: themeMap.formBG }}
                         >
+                            {/* TODO Title input */}
                             <TextInput
                                 cursorColor={themeMap.formInputFC}
                                 placeholderTextColor={themeMap.formInputFCPlaceHolder}
@@ -166,6 +161,7 @@ export const NewTodo = () => {
                                 placeholder="Title"
                                 onChangeText={v => handleTextInputs(v, 'title')}
                             />
+                            {/* TODO Description input */}
                             <TextInput
                                 cursorColor={themeMap.formInputFC}
                                 placeholderTextColor={themeMap.formInputFCPlaceHolder}
@@ -177,19 +173,15 @@ export const NewTodo = () => {
                                 placeholder="Description"
                                 onChangeText={v => handleTextInputs(v, 'description')}
                             />
-                            {/* Displays DatePicker selected value */}
-                            <Pressable onPress={e => setShowDP(true)} style={{ ...styles.datePickerInputPressable }}>
-                                <TextInput
-                                    editable={false}
-                                    cursorColor={themeMap.formInputFC}
-                                    style={{
-                                        ...styles.datePickerInput,
-                                        borderColor: themeMap.formInputBorder,
-                                        color: themeMap.formInputFC,
-                                    }}
-                                    value={(new Date(expiry)).toString()}
-                                />
-                            </Pressable>
+                            {/* DatePicker input */}
+                            <Text style={{ ...styles.datePickerLabel, color: themeMap.formInputFC }}>
+                                TODO Expires at :
+                            </Text>
+                            <RNDTPicker
+                                displayDateStyle={{ color: themeMap.bodyFC }}
+                                pressAblesStyle={{ backgroundColor: themeMap.bodyBlue }}
+                                pressAbleTextsStyle={{ color: themeMap.bodyBlueContrast }}
+                            />
                             <View style={{ alignItems: "center", marginTop: 15 }}>
                                 <Pressable
                                     onPress={pickImages}
@@ -273,19 +265,16 @@ const styles = StyleSheet.create({
         width: '90%',
         padding: 20
     },
+    datePickerLabel: {
+        lineHeight: 50,
+        fontSize: _Font_Sizes.textInput
+    },
     textInputs: {
         borderBottomWidth: 1,
         borderStyle: 'solid',
         marginTop: 10,
         padding: 5,
         fontSize: _Font_Sizes.textInput
-    },
-    datePickerInputPressable: {},
-    datePickerInput: {
-        padding: 5,
-        fontSize: _Font_Sizes.textInput,
-        borderBottomWidth: 1,
-        borderStyle: 'solid',
     },
     formBtnBox: {
         borderWidth: 1,

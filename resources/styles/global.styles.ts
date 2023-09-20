@@ -7,6 +7,8 @@ export const _Font_Sizes = {
     headerBtn: 20,
     cardTitle: 18,
     normal: 15,
+    normalLarge: 16,
+    btn: 14,
     textInput: 16,
     bottomTabTitle: 17
 }
