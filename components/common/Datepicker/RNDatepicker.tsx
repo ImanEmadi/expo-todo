@@ -25,6 +25,7 @@ export interface RNDatePickerProps extends Omit<RNDateTimePickerProps, 'mode' | 
      * styles for the `Text` element, containing the selected value
      */
     displayDateStyle?: StyleProp<TextStyle>,
+    onSelection?: (d: Date) => void
 }
 
 export const RNDTPicker = ({
@@ -32,6 +33,7 @@ export const RNDTPicker = ({
     pressAbleTextsStyle = {},
     pressAblesStyle = {},
     pickerView = {},
+    onSelection,
     ...props
 }: RNDatePickerProps) => {
 
@@ -67,8 +69,9 @@ export const RNDTPicker = ({
         if (value_Date) {
             const d = new Date(`${value_Date} ${value_time}`);
             setSelectedDateTime(d);
+            onSelection && onSelection(d);
         }
-    }, [value_Date, value_time, setSelectedDateTime])
+    }, [value_Date, value_time, setSelectedDateTime, onSelection])
 
     const handlePressable = useCallback((m: RNDateTimePickerProps['mode']) => {
         setPickerMode(m);

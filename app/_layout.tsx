@@ -5,17 +5,20 @@ import { darkTheme } from 'resources/styles/theme.styles';
 import { AppShell } from 'components/app';
 import { _Font_Sizes } from 'resources/styles/global.styles';
 import { BottomTabsNavigator } from 'components/common/navs/bottom.tabs';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 export default function RootLayout() {
 
     return (
         <>
             <StatusBar style="auto" backgroundColor={darkTheme.headerBG} />
-            <AppShell />
-            <View style={{ ...styles.layoutView, backgroundColor: darkTheme.bodyBG }}>
-                <MainHeader />
-                <BottomTabsNavigator />
-            </View>
+            <RootSiblingParent>
+                <AppShell />
+                <View style={{ ...styles.layoutView, backgroundColor: darkTheme.bodyBG }}>
+                    <MainHeader />
+                    <BottomTabsNavigator />
+                </View>
+            </RootSiblingParent>
         </>
     );
 }

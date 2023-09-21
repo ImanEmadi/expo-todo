@@ -14,7 +14,8 @@ export type TODO_Image = Pick<Asset, 'id' | 'filename' | 'height' | 'width' | 'u
 
 export type TODOData = TODO[];
 /**
- *? `STE` : Soon to expire.
+ *? 0 = expired                                                             
+ *? 1 = Soon to expire                                                          
+ *? 2 = valid                                               
  */
-export type TODOExpiryStatus = 'valid' | 'STE' | 'expired';
 export type TODOExpiryStatusCode = 0 | 1 | 2;

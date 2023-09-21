@@ -9,8 +9,10 @@ export const DEFAULT_APP_THEME: AppTheme = 'dark';
 export const MEDIA_ALBUM_NAME = "Todos Album";
 
 //** ROUTES */
+
 export const PATH_SETTINGS = '/settings'
 export const PATH_NEW_TODO = '/newTodo';
+export const PATH_EDIT_TODO = '/edit/[todo]'
 
 //*  AsyncStorage keys
 

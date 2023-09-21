@@ -10,7 +10,10 @@ import { MEDIA_ALBUM_NAME } from "constants/app.constants";
 import { TODO, TODO_Image } from "types/data.types";
 import { getTODOData, saveTODOData } from "helpers/todo.utils";
 import { generateTODOId } from "helpers/generators";
-import { RNDTPicker, RNDateTimePickerOnChange, RNDateTimePickerProps } from "components/common/Datepicker/RNDatepicker";
+import { RNDTPicker } from "components/common/Datepicker/RNDatepicker";
+import { CheckBox } from "components/common/customs/checkbox";
+import Toast from "react-native-root-toast";
+import { defaultToastOptions } from 'constants/defaults';
 
 type TextData = Pick<TODO, 'title' | 'description'>;
 export const NewTodo = () => {
@@ -22,7 +25,8 @@ export const NewTodo = () => {
         title: '',
         description: ''
     });
-    const [expiryDate, setExpiryDate] = useState(0);
+    const [expiryDate, setExpiryDate] = useState<Date>();
+    const [autoDel, setAutoDel] = useState<boolean>(false);
 
     const handleTextInputs = useCallback<(v: string, k: keyof TextData) => void>((v, k) => {
         setTextData(d => ({ ...d, [k]: v }));
@@ -84,13 +88,16 @@ export const NewTodo = () => {
     const addTodo = useCallback(async () => {
         const todo_images: TODO_Image[] = [];
 
-        if (!textData.title.length || !textData.description.length)
+        const { title, description } = textData;
+
+        if (!title.length || !description.length)
             return alert("Inputs can not be empty");
+
+        if (!expiryDate)
+            return alert("Please choose an expiry date.");
 
         if (assets.length) {
             try {
-
-                const album = await MediaLibrary.getAlbumAsync(MEDIA_ALBUM_NAME);
                 const _createdAssets = await new Promise<MediaLibrary.Asset[]>(async r => {
                     //? creating asset from the selected media
                     const new_asts: MediaLibrary.Asset[] = [];
@@ -99,6 +106,7 @@ export const NewTodo = () => {
                     r(new_asts);
                 });
 
+                const album = await MediaLibrary.getAlbumAsync(MEDIA_ALBUM_NAME);
                 if (!album) {
                     //? Creating the album, by adding an asset to it.
                     const _album = await MediaLibrary.createAlbumAsync(MEDIA_ALBUM_NAME, _createdAssets[0]);
@@ -114,30 +122,34 @@ export const NewTodo = () => {
                     id, width, height, filename, uri
                 }));
 
-                const todo_data = await getTODOData();
-                todo_data.push({
-                    id: generateTODOId(),
-                    created: Date.now(),
-                    title: textData.title,
-                    autoDel: true,
-                    expires: 0,
-                    description: textData.description,
-                    images: todo_images
-                });
-
-                await saveTODOData(todo_data);
-
             } catch (error) {
                 console.error(error);
             }
         }
+        const todo_data = await getTODOData();
+        todo_data.push({
+            id: generateTODOId(),
+            created: Date.now(),
+            title: title,
+            autoDel,
+            expires: expiryDate.getTime(),
+            description: description,
+            images: todo_images
+        });
 
-    }, [assets, addToAlbum, textData])
+        await saveTODOData(todo_data);
+        Toast.show("New todo has been added", {
+            ...defaultToastOptions,
+            textColor: themeMap.bodyGreenContrast,
+            backgroundColor: themeMap.bodyGreenShade
+        });
+    }, [assets, addToAlbum, textData, expiryDate, autoDel, themeMap])
 
     return (
         <>
             <View style={{ ...styles.container, backgroundColor: themeMap.bodyBG }}>
                 <ScrollView keyboardShouldPersistTaps={'always'}>
+                    {/* HEADER OF THE FORM */}
                     <View style={{ ...styles.header }}>
                         <Text
                             style={{ ...styles.headerText, color: themeMap.bodyHeaderFC }}
@@ -145,6 +157,7 @@ export const NewTodo = () => {
                             Create a new TODO!
                         </Text>
                     </View>
+                    {/* FORM BOX  */}
                     <View style={{ ...styles.formBox }}>
                         <View
                             style={{ ...styles.form, backgroundColor: themeMap.formBG }}
@@ -173,15 +186,18 @@ export const NewTodo = () => {
                                 placeholder="Description"
                                 onChangeText={v => handleTextInputs(v, 'description')}
                             />
-                            {/* DatePicker input */}
+                            {/* DatePicker Label */}
                             <Text style={{ ...styles.datePickerLabel, color: themeMap.formInputFC }}>
                                 TODO Expires at :
                             </Text>
+                            {/* DATE PICKER Input */}
                             <RNDTPicker
                                 displayDateStyle={{ color: themeMap.bodyFC }}
                                 pressAblesStyle={{ backgroundColor: themeMap.bodyBlue }}
                                 pressAbleTextsStyle={{ color: themeMap.bodyBlueContrast }}
+                                onSelection={setExpiryDate}
                             />
+                            {/* Image picker buttons */}
                             <View style={{ alignItems: "center", marginTop: 15 }}>
                                 <Pressable
                                     onPress={pickImages}
@@ -221,10 +237,20 @@ export const NewTodo = () => {
                                     </Text>
                                 </Pressable>
                             </View>
+                            {/* Auto Del checkbox */}
+                            <View style={{ ...styles.checkBoxContainer }}>
+                                <CheckBox
+                                    onChange={setAutoDel}
+                                    iconColor={themeMap.bodyBlueTint}
+                                    labelColor={themeMap.formInputFC}
+                                    label="Auto delete? "
+                                />
+                            </View>
                         </View>
                         {/* end form */}
                     </View>
                     {/* end form box */}
+                    {/* SELECTED IMAGES' BOX */}
                     <View style={{ ...styles.imagesBox }}>
                         {assets.map((ast, i) => (
                             <Image
@@ -294,5 +320,6 @@ const styles = StyleSheet.create({
     },
     image: {
         marginTop: 10,
-    }
+    },
+    checkBoxContainer: {}
 })

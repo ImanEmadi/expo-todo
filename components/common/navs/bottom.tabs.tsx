@@ -60,6 +60,7 @@ export const BottomTabsNavigator = () => {
                 }}
             />
             <Tabs.Screen name="settings/index" options={{ href: null }} />
+            <Tabs.Screen name="edit/[todo]" options={{ href: null }} />
         </Tabs>
     </>;
 }

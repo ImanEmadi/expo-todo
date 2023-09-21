@@ -31,9 +31,10 @@ export const NewTodoButton = () => {
 
 const styles = StyleSheet.create({
     container: {
-        height: 200,
+        minHeight: 100,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginVertical: 20
     },
     innerBox: {
         width: '80%',
