@@ -1,4 +1,4 @@
-This project, including all its source code, documentation (hereinafter referred to as `"the Software"`), is the intellectual property of `Iman Emadi` (hereinafter referred to as `"the Author"`).
+This project, including all its source code and documentation (hereinafter referred to as `"the Software"`), is the intellectual property of `Iman Emadi` (hereinafter referred to as `"the Author"`).
 
 **The Software is provided solely for the purpose of showcasing the coding skills of the Author in the context of a React Native (Expo) project.** By accessing or using the Software, you agree to the following terms and conditions:
 
