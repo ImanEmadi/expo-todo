@@ -10,4 +10,4 @@ This project, including all its source code and documentation (hereinafter refer
 
 4. The Software is provided "as is," without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement. In no event shall the Author be liable for any claim, damages, or other liability arising out of or in connection with the use or performance of the Software.
 
-By accessing or using the Software, you acknowledge that you have read this license, understand its terms, and agree to be bound by its provisions.
+_By accessing or using the Software, you acknowledge that you have read this license, understand its terms, and agree to be bound by its provisions._
