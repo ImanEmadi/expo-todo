@@ -13,7 +13,7 @@ import { generateTODOId } from "helpers/generators";
 import { RNDTPicker } from "components/common/Datepicker/RNDatepicker";
 import { CheckBox } from "components/common/customs/checkbox";
 import Toast from "react-native-root-toast";
-import { defaultToastOptions } from 'constants/defaults';
+import { DEFAULT_TOAST_OPTIONS } from 'constants/defaults';
 
 type TextData = Pick<TODO, 'title' | 'description'>;
 export const NewTodo = () => {
@@ -139,7 +139,7 @@ export const NewTodo = () => {
 
         await saveTODOData(todo_data);
         Toast.show("New todo has been added", {
-            ...defaultToastOptions,
+            ...DEFAULT_TOAST_OPTIONS,
             textColor: themeMap.bodyGreenContrast,
             backgroundColor: themeMap.bodyGreenShade
         });

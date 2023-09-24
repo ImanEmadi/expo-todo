@@ -59,10 +59,6 @@ export const darkTheme = {
  */
 export const lightTheme = darkTheme;
 
-
-
-
-
 export const loadTheme = (theme: AppTheme): ThemeMap => {
     switch (theme) {
         case 'dark':

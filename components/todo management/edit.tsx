@@ -1,7 +1,7 @@
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { getTODObyID, getTodoExpiryStatus, getTodoExpiryStatusCode } from "helpers/todo.utils";
 import { useTheme } from "hooks/useTheme";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { View, Text, StyleSheet, useWindowDimensions } from "react-native";
 import { _Font_Sizes } from "resources/styles/global.styles";
 import { TODO } from "types/data.types";
@@ -9,7 +9,9 @@ import { NoTODO } from "./no-todo";
 import { Image } from "expo-image";
 import { ScrollView } from "react-native-gesture-handler";
 import * as MediaLibrary from 'expo-media-library';
-import { MEDIA_ALBUM_NAME } from "constants/app.constants";
+import { handleMediaLibraryPermissions } from "helpers/permissions";
+import Toast from "react-native-root-toast";
+import { DEFAULT_TOAST_OPTIONS } from 'constants/defaults';
 
 export const EditTODO = () => {
 
@@ -78,46 +80,45 @@ interface TODOImages {
 export const TODOImages = ({ todo }: TODOImages) => {
 
     const { width } = useWindowDimensions();
+    const themeMap = useTheme();
     const [renderImages, setRenderImages] = useState<boolean>(false);
     const [todoAssets, setTodoAssets] = useState<MediaLibrary.AssetInfo[]>([]);
 
     const focusEffect = useCallback(() => {
-        MediaLibrary.isAvailableAsync().then(isAV => {
-            if (!isAV) return alert("MediaLibrary API is not available on your device!");
-            MediaLibrary.getPermissionsAsync().then(async per => {
-                if (!per.granted) {
-                    if (!per.canAskAgain) return alert("Permission to access device media is denied!");
-                    else {
-                        const _per = await MediaLibrary.requestPermissionsAsync() // end request permissions
-                        if (!_per.granted) return alert("access to media denied. can not render images");
-                    }
-                } // end permission validation
 
-                // const album = await MediaLibrary.getAlbumAsync(MEDIA_ALBUM_NAME);
-                // if (!album) return alert("Album not found!");
-                // const { assets } = await MediaLibrary.getAssetsAsync({ album });
-                // const img_ids = todo.images.map(img => img.id);
+        handleMediaLibraryPermissions().then(async r => {
+            if (!r) return;
 
-                const assetInfos = await new Promise<MediaLibrary.AssetInfo[]>(async r => {
-                    const _Arr: MediaLibrary.AssetInfo[] = [];
-                    for (const img of todo.images) {
-                        try {
-                            const info = await MediaLibrary.getAssetInfoAsync(img.id);
-                            if (info)
-                                _Arr.push(info);
-                        } catch (error) {
-                            continue;
-                        }
-                    }
-                    r(_Arr);
-                })
-                setTodoAssets(assetInfos);
-                setRenderImages(true);
-            }) // end check permissions
+            const assetInfos = await Promise.all(todo.images.map(async _img => {
+                try {
+                    const info = await MediaLibrary.getAssetInfoAsync(_img.id);
+                    return info ?? null;
+                } catch (error) {
+                    return null;
+                }
+            }));
+            const filteredAssets = assetInfos.filter(ai => ai !== null) as MediaLibrary.AssetInfo[];
+            // console.log(assetInfos.length, filteredAssets.length)
+            if (filteredAssets.length !== assetInfos.length)
+                Toast.show(`${assetInfos.length - filteredAssets.length} image(s) failed to load!`,
+                    {
+                        ...DEFAULT_TOAST_OPTIONS,
+                        backgroundColor: themeMap.bodyOrangeShade,
+                        textColor: themeMap.bodyOrangeContrast
+                    });
+
+            setTodoAssets(filteredAssets);
+            setRenderImages(true);
         })
-    }, [setTodoAssets, setRenderImages, todo]);
 
-    useFocusEffect(focusEffect)
+        return () => {
+            // console.log('cleanup');
+            setTodoAssets([]);
+            setRenderImages(false);
+        }
+    }, [themeMap, renderImages]);
+
+    useFocusEffect(focusEffect);
 
     return <>
         <View style={{ ...styles.imgBox }}>
@@ -133,7 +134,6 @@ export const TODOImages = ({ todo }: TODOImages) => {
                 />)}
             </> : <Text>Error loading images.</Text>}
         </View>
-
     </>;
 }
 
