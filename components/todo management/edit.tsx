@@ -12,6 +12,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { handleMediaLibraryPermissions } from "helpers/permissions";
 import Toast from "react-native-root-toast";
 import { DEFAULT_TOAST_OPTIONS } from 'constants/defaults';
+import { TODOButtons } from "./todo-actions";
 
 export const EditTODO = () => {
 
@@ -24,6 +25,10 @@ export const EditTODO = () => {
             getTODObyID(todoID).then(t => {
                 if (t !== null) setTodo(t);
             })
+
+        return () => {
+            setTodo(null);
+        }
     }, [todoID])
 
     useFocusEffect(focusEffect);
@@ -44,7 +49,10 @@ export const EditTODO = () => {
                         <TODOValue value={todo.title} />
                         <TODOLabel label="Description :" />
                         <TODOValue value={todo.description} />
-                        {todo.images.length > 0 && (<TODOImages todo={todo} />)}
+                        {/* Action Buttons */}
+                        <TODOButtons todoID={todo.id} />
+                        {/* TODO Images */}
+                        {todo.images.length > 0 && (<TODOImages key={todo.id} todo={todo} />)}
                     </View>
                 ) : <NoTODO />}
             </ScrollView>
@@ -84,8 +92,7 @@ export const TODOImages = ({ todo }: TODOImages) => {
     const [renderImages, setRenderImages] = useState<boolean>(false);
     const [todoAssets, setTodoAssets] = useState<MediaLibrary.AssetInfo[]>([]);
 
-    const focusEffect = useCallback(() => {
-
+    useFocusEffect(useCallback(() => {
         handleMediaLibraryPermissions().then(async r => {
             if (!r) return;
 
@@ -110,15 +117,7 @@ export const TODOImages = ({ todo }: TODOImages) => {
             setTodoAssets(filteredAssets);
             setRenderImages(true);
         })
-
-        return () => {
-            // console.log('cleanup');
-            setTodoAssets([]);
-            setRenderImages(false);
-        }
-    }, [themeMap, renderImages]);
-
-    useFocusEffect(focusEffect);
+    }, [themeMap, todo]));
 
     return <>
         <View style={{ ...styles.imgBox }}>
