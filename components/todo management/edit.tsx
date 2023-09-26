@@ -91,6 +91,7 @@ export const TODOImages = ({ todo }: TODOImages) => {
     const themeMap = useTheme();
     const [renderImages, setRenderImages] = useState<boolean>(false);
     const [todoAssets, setTodoAssets] = useState<MediaLibrary.AssetInfo[]>([]);
+    const [failedLoadsCount, setFailedLoadsCount] = useState(0);
 
     useFocusEffect(useCallback(() => {
         handleMediaLibraryPermissions().then(async r => {
@@ -105,35 +106,40 @@ export const TODOImages = ({ todo }: TODOImages) => {
                 }
             }));
             const filteredAssets = assetInfos.filter(ai => ai !== null) as MediaLibrary.AssetInfo[];
-            // console.log(assetInfos.length, filteredAssets.length)
-            if (filteredAssets.length !== assetInfos.length)
-                Toast.show(`${assetInfos.length - filteredAssets.length} image(s) failed to load!`,
-                    {
-                        ...DEFAULT_TOAST_OPTIONS,
-                        backgroundColor: themeMap.bodyOrangeShade,
-                        textColor: themeMap.bodyOrangeContrast
-                    });
+
+            setFailedLoadsCount(filteredAssets.length - assetInfos.length)
 
             setTodoAssets(filteredAssets);
             setRenderImages(true);
         })
     }, [themeMap, todo]));
 
-    return <>
-        <View style={{ ...styles.imgBox }}>
-            {renderImages ? <>
-                {todoAssets.map((ass, index) => <Image
-                    key={index}
-                    source={{ uri: ass.localUri }}
-                    style={{
-                        width: ass.width > width ? '95%' : ass.width,
-                        height: (width / ass.width) * ass.height,
-                        ...styles.img
-                    }}
-                />)}
-            </> : <Text>Error loading images.</Text>}
-        </View>
-    </>;
+    return (
+        <>
+            <View style={{ ...styles.imgBox }}>
+                {renderImages && (
+                    <>
+                        {todoAssets.map((ass, index) => (
+                            <Image
+                                key={index}
+                                source={{ uri: ass.localUri }}
+                                style={{
+                                    width: ass.width > width ? "95%" : ass.width,
+                                    height: (width / ass.width) * ass.height,
+                                    ...styles.img,
+                                }}
+                            />
+                        ))}
+                        {failedLoadsCount !== 0 && (
+                            <View>
+                                <Text> {failedLoadsCount} Images failed to load. </Text>
+                            </View>
+                        )}
+                    </>
+                )}
+            </View>
+        </>
+    );
 }
 
 const styles = StyleSheet.create({

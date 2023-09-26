@@ -3,7 +3,7 @@ import { useAppStore } from "store/app.store";
 import { useCallback } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ASK_APP_THEME, DEFAULT_APP_THEME } from "constants/app.constants";
-import { isValidAppTheme } from "resources/validators/app.validators";
+import { isValidAppTheme } from "validators/app.validators";
 
 export const AppShell = () => {
 

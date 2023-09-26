@@ -56,3 +56,14 @@ export const getTodoExpiryStatus = (expiryCode: TODOExpiryStatusCode): string =>
 
 }
 
+
+
+/**
+ * Deletes all TODOs that are expired from the Storage.                                         
+ * @returns `Promise<void>`, received from the AsyncStorage. 
+ */
+export const deleteExpiredTODOs = async (): Promise<void> => {
+    const data = await getTODOData();
+    const now = Date.now();
+    return saveTODOData(data.filter(t => !t.autoDel || t.expires > now));
+}

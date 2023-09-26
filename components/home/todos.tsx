@@ -1,6 +1,6 @@
 import { PATH_EDIT_TODO } from "constants/app.constants";
 import { useFocusEffect, useRouter } from "expo-router";
-import { getTODOData, getTodoExpiryStatus, getTodoExpiryStatusCode } from "helpers/todo.utils";
+import { deleteExpiredTODOs, getTODOData, getTodoExpiryStatus, getTodoExpiryStatusCode } from "helpers/todo.utils";
 import { useTheme } from "hooks/useTheme";
 import { useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native"
@@ -13,15 +13,18 @@ export const TODOs = () => {
 
     //TODO: Display how many todo are there in total.
     const focusEffect = useCallback(() => {
-        getTODOData().then(d => {
-            const sortedData = d.sort((b, a) => b.expires - a.expires);
-            setTodoData([
-                //TODO: add dynamic setting feature. user can choose "how many todo of each status can be displayed in home page"
-                ...sortedData.filter(t => getTodoExpiryStatusCode(t.expires) === 0).slice(0, 3),
-                ...sortedData.filter(t => getTodoExpiryStatusCode(t.expires) === 1).slice(0, 3),
-                ...sortedData.filter(t => getTodoExpiryStatusCode(t.expires) === 2).slice(0, 3),
-            ]);
-        })
+        deleteExpiredTODOs().then(() => { // deleting expired TODOs with `autoDel` property set to `true`
+            getTODOData().then(d => { // fetching remaining TODOs
+                const sortedData = d.sort((b, a) => b.expires - a.expires);
+                setTodoData([
+                    //TODO: add dynamic setting feature. user can choose "how many todo of each status can be displayed in home page"
+                    //? Refactoring postponed until `setting` screen is implemented.
+                    ...sortedData.filter(t => getTodoExpiryStatusCode(t.expires) === 0).slice(0, 3),
+                    ...sortedData.filter(t => getTodoExpiryStatusCode(t.expires) === 1).slice(0, 3),
+                    ...sortedData.filter(t => getTodoExpiryStatusCode(t.expires) === 2).slice(0, 3),
+                ]);
+            });
+        });
     }, [setTodoData]);
 
     useFocusEffect(focusEffect);
