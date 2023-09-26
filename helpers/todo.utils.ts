@@ -20,16 +20,13 @@ export const saveTODOData = async (todo_data: TODOData): Promise<void> => {
 }
 
 export const getTODObyID = async (id: string): Promise<TODO | null> => {
-    const data_str = await AsyncStorage.getItem(ASK_TODO_DATA);
-    if (data_str === null) return null;
-    try {
-        const data = JSON.parse(data_str) as TODOData;
-        return data.filter(todo => todo.id === id)[0] ?? null;
-    } catch (error) {
-        alert('Error reading TODO Data !');
-        resetTODOData();
-        return null;
-    }
+    const data = await getTODOData();
+    return data.filter(todo => todo.id === id)[0] ?? null;
+}
+
+export const deleteTODOByID = async (id: string): Promise<void> => {
+    const data = await getTODOData();
+    saveTODOData(data.filter(t => t.id !== id));
 }
 
 const resetTODOData = () => {

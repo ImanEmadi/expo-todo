@@ -5,7 +5,7 @@ import { Asset } from "expo-asset";
 import { useTheme } from "hooks/useTheme";
 import { usePathname, useRouter } from "expo-router";
 import Constants from 'expo-constants';
-import { MAIN_HEADER_HEIGHT, PATH_SETTINGS } from "constants/app.constants";
+import { MAIN_HEADER_HEIGHT, PATH_ALL_TODOS, PATH_SETTINGS } from "constants/app.constants";
 import { _Font_Sizes } from "resources/styles/global.styles";
 
 const asset = Asset.fromModule(require('./../../../static/images/logo.png'));
@@ -26,7 +26,7 @@ export default function MainHeader() {
             borderColor: themeMap.headerBorder
         }}>
             <View style={{ flex: 1, padding: 8, alignItems: 'center' }}>
-                <Pressable style={{ width: iconWidth }} onPress={e => router.push('/')}>
+                <Pressable style={{ width: iconWidth }} onPress={e => router.push(PATH_ALL_TODOS)}>
                     <Image
                         style={{ width: iconWidth, height: iconWidth }}
                         source={{ uri: asset.uri }}

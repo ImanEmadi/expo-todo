@@ -13,6 +13,7 @@ export const MEDIA_ALBUM_NAME = "Todos Album";
 export const PATH_SETTINGS = '/settings'
 export const PATH_NEW_TODO = '/newTodo';
 export const PATH_EDIT_TODO = '/edit/[todo]'
+export const PATH_ALL_TODOS = '/';
 
 //*  AsyncStorage keys
 
