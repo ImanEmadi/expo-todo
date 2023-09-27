@@ -6,6 +6,4 @@ const useAppStore = create<AppStoreInterface>()(set => ({
     setTheme: t => set({ theme: t })
 }))
 
-
-
 export { useAppStore };

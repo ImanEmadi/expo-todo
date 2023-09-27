@@ -72,7 +72,7 @@ const TODOValue = ({ value, color, ...props }: { value: string } & TextStyle) =>
     const themeMap = useTheme();
 
     return <>
-        <Text style={{ ...styles.value, color: color ?? themeMap.bodyFLightBlue }} {...props}>
+        <Text style={{ ...styles.value, color: color ?? themeMap.bodyFCLightBlue }} {...props}>
             {value}
         </Text>
     </>

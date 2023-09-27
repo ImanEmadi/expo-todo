@@ -6,7 +6,7 @@ export const darkTheme = {
     bodyBGShadeActive: '#17171c',
     bodyBGTint: '#393946',
     bodyFC: '#e3e3e8',
-    bodyFLightBlue: '#80aaff',
+    bodyFCLightBlue: '#80aaff',
     bodyHeaderFC: '#80b3ff',
     formBG: '#091e2a',
     formBGShade: '#040f15',
