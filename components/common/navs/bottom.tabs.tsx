@@ -26,8 +26,7 @@ export const BottomTabsNavigator = () => {
                 tabBarActiveBackgroundColor: themeMap.bottomTabBG,
                 tabBarActiveTintColor: themeMap.bottomTabActiveTint,
                 tabBarInactiveTintColor: themeMap.bottomTabInactiveTint,
-            }}
-        >
+            }}>
             <Tabs.Screen
                 name="index"
                 options={{

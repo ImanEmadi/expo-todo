@@ -152,16 +152,14 @@ export const NewTodo = () => {
                     {/* HEADER OF THE FORM */}
                     <View style={{ ...styles.header }}>
                         <Text
-                            style={{ ...styles.headerText, color: themeMap.bodyHeaderFC }}
-                        >
+                            style={{ ...styles.headerText, color: themeMap.bodyHeaderFC }}>
                             Create a new TODO!
                         </Text>
                     </View>
                     {/* FORM BOX  */}
                     <View style={{ ...styles.formBox }}>
                         <View
-                            style={{ ...styles.form, backgroundColor: themeMap.formBG }}
-                        >
+                            style={{ ...styles.form, backgroundColor: themeMap.formBG }}>
                             {/* TODO Title input */}
                             <TextInput
                                 cursorColor={themeMap.formInputFC}
@@ -207,14 +205,12 @@ export const NewTodo = () => {
                                             ? themeMap.bodyBlueFade
                                             : "transparent",
                                         borderColor: themeMap.bodyBlue,
-                                    })}
-                                >
+                                    })}>
                                     <Text
                                         style={{
                                             ...styles.formBtnText,
                                             color: themeMap.bodyBlueContrast,
-                                        }}
-                                    >
+                                        }}>
                                         Choose Images
                                     </Text>
                                 </Pressable>
@@ -231,8 +227,7 @@ export const NewTodo = () => {
                                         style={{
                                             ...styles.formBtnText,
                                             color: themeMap.bodyGreenContrast,
-                                        }}
-                                    >
+                                        }}>
                                         Add TODO!
                                     </Text>
                                 </Pressable>

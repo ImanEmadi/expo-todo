@@ -18,8 +18,7 @@ export const NewTodoButton = () => {
                     }}
                     onPressIn={e => setIsPressed(true)}
                     onPressOut={e => setIsPressed(false)}
-                    onPress={e => router.push(PATH_NEW_TODO)}
-                >
+                    onPress={e => router.push(PATH_NEW_TODO)}>
                     <Text style={{ ...styles.mainText, color: theme.bodyFC }}>
                         Create New TODO
                     </Text>

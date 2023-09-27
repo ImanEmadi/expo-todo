@@ -25,8 +25,8 @@ export const CheckBox = ({ label,
 }: CheckBoxProps) => {
 
     const [checked, setChecked] = useState<boolean>(defaultState);
-    const _CheckedComp = useMemo<React.ReactNode>(() => CheckedIcon ? CheckedIcon : <Ionicons name="checkbox" size={24} color={iconColor} />, [CheckedIcon, iconColor])
-    const _unCheckedComp = useMemo<React.ReactNode>(() => UnCheckedIcon ? UnCheckedIcon : <Ionicons name="checkbox-outline" size={24} color={iconColor} />, [UnCheckedIcon, iconColor])
+    const _CheckedComp = useMemo<React.ReactNode>(() => CheckedIcon ? CheckedIcon : <Ionicons name="checkbox" size={_Font_Sizes.textIcon} color={iconColor} />, [CheckedIcon, iconColor])
+    const _unCheckedComp = useMemo<React.ReactNode>(() => UnCheckedIcon ? UnCheckedIcon : <Ionicons name="checkbox-outline" size={_Font_Sizes.textIcon} color={iconColor} />, [UnCheckedIcon, iconColor])
 
     useEffect(() => {
         onChange && onChange(checked);

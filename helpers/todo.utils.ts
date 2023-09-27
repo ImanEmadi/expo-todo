@@ -50,7 +50,7 @@ export const getTodoExpiryStatus = (expiryCode: TODOExpiryStatusCode): string =>
 
     switch (expiryCode) {
         case 0: return 'Expired!';
-        case 1: return '"Soon to expire!"';
+        case 1: return 'Due soon!';
         case 2: return 'Valid'
     }
 

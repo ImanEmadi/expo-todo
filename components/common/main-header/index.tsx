@@ -38,8 +38,7 @@ export default function MainHeader() {
                     style={{ ...styles.headerBtnPressable }}
                     onPressIn={e => setHeaderBtnPressed(true)}
                     onPressOut={e => setHeaderBtnPressed(false)}
-                    onPress={e => router.push(PATH_SETTINGS)}
-                >
+                    onPress={e => router.push(PATH_SETTINGS)}>
                     <Text style={{
                         color: headerBtnPressed ? themeMap.headerFCSecondary : themeMap.headerFC,
                         backgroundColor: pathname === PATH_SETTINGS ? themeMap.headerBGActive : 'transparent',

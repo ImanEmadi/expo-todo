@@ -1,9 +1,10 @@
 import { PATH_EDIT_TODO } from "constants/app.constants";
 import { useFocusEffect, useRouter } from "expo-router";
 import { deleteExpiredTODOs, getTODOData, getTodoExpiryStatus, getTodoExpiryStatusCode } from "helpers/todo.utils";
+import { useTODOStatusColor } from "hooks/useTODOStatusColor";
 import { useTheme } from "hooks/useTheme";
 import { useCallback, useMemo, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native"
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { _Font_Sizes } from "resources/styles/global.styles";
 import { TODO } from "types/data.types";
 
@@ -12,7 +13,7 @@ export const TODOs = () => {
     const [todoData, setTodoData] = useState<TODO[]>([]);
 
     //TODO: Display how many todo are there in total.
-    const focusEffect = useCallback(() => {
+    useFocusEffect(useCallback(() => {
         deleteExpiredTODOs().then(() => { // deleting expired TODOs with `autoDel` property set to `true`
             getTODOData().then(d => { // fetching remaining TODOs
                 const sortedData = d.sort((b, a) => b.expires - a.expires);
@@ -25,9 +26,7 @@ export const TODOs = () => {
                 ]);
             });
         });
-    }, [setTodoData]);
-
-    useFocusEffect(focusEffect);
+    }, [setTodoData]));
 
     return <View style={{ ...styles.vList }}>
         {todoData.map((d, i) => <RenderItem item={d} key={i} />)}
@@ -37,20 +36,9 @@ export const TODOs = () => {
 const RenderItem = ({ item: { title, description, expires, autoDel, id } }: { item: TODO }) => {
 
     const router = useRouter();
-    const theme = useTheme();
     const statusCode = useMemo(() => getTodoExpiryStatusCode(expires), [getTodoExpiryStatusCode, expires]);
-    /**
-     *? Assigning color groups based on current status code
-     */
-    const [bgActive, bg, fc] = useMemo(() => {
-        switch (statusCode) {
-            case 0: return [theme.bodyRedFade, theme.bodyRedShade, theme.bodyRedContrast]
-            case 1: return [theme.bodyOrangeFade, theme.bodyOrangeShade, theme.bodyOrangeContrast]
-            case 2:
-            default:
-                return [theme.bodyBlueFade, theme.bodyBlueShade, theme.bodyBlueContrast]
-        }
-    }, [statusCode, theme]);
+    const themeMap = useTheme();
+    const [bgActive, , fc] = useTODOStatusColor(statusCode);
 
     return (
         <>
@@ -58,33 +46,33 @@ const RenderItem = ({ item: { title, description, expires, autoDel, id } }: { it
                 onPress={e => {
                     router.push({ pathname: PATH_EDIT_TODO, params: { todo: id } })
                 }}
-                style={({ pressed }) => ({
+                style={({ pressed: p }) => ({
                     ...styles.todoPressable,
-                    backgroundColor: pressed ? bgActive : bg,
-                })}
-            >
-                <View style={{ ...styles.subViews }}>
-                    <Text
-                        style={{
-                            fontSize: _Font_Sizes.cardTitle,
-                            color: fc,
-                        }}
-                    >
-                        {title}
-                    </Text>
+                    backgroundColor: p ? themeMap.bodyBGShadeActive : themeMap.bodyBGShade
+                })}>
+                {/* Status Box */}
+                <View style={{
+                    ...styles.todoStatusView,
+
+                }}>
+                    <View style={{ ...styles.todoStatusInnerView, backgroundColor: bgActive }}>
+                        <Text style={{ ...styles.todoStatusText, color: fc }}>
+                            {getTodoExpiryStatus(statusCode)}
+                        </Text>
+                    </View>
                 </View>
-                <View style={{ ...styles.subViews }}>
-                    <Text style={{ fontSize: _Font_Sizes.normal, color: fc }}>
-                        {description}
-                    </Text>
-                </View>
-                <View style={{ ...styles.subViews }}>
-                    <Text style={{ fontSize: _Font_Sizes.normal, color: fc }}>
-                        Status : {getTodoExpiryStatus(statusCode)}
-                    </Text>
-                    <Text style={{ fontSize: _Font_Sizes.normal, color: fc }}>
-                        Auto Delete: {autoDel ? 'YES' : 'NO'}
-                    </Text>
+                {/* Content Box */}
+                <View style={{ ...styles.todoContentViewBox }}>
+                    <View style={{ ...styles.todoContent }}>
+                        <Text numberOfLines={1} style={{ ...styles.todoContentText, color: themeMap.bodyFC }}>
+                            {title}
+                        </Text>
+                    </View>
+                    <View style={{ ...styles.todoContent }}>
+                        <Text numberOfLines={1} style={{ ...styles.todoContentText, color: themeMap.bodyFC }}>
+                            {description}
+                        </Text>
+                    </View>
                 </View>
             </Pressable>
         </>
@@ -99,12 +87,34 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     todoPressable: {
-        width: '80%',
         paddingVertical: 10,
-        paddingHorizontal: 7
+        paddingHorizontal: 7,
+        flexDirection: 'row'
     },
-    subViews: {
-        padding: 6
+    todoStatusView: {
+        justifyContent: 'center',
+        paddingHorizontal: 10,
+    },
+    todoStatusInnerView: {
+        flex: 0,
+        alignItems: 'center'
+    },
+    todoStatusText: {
+        lineHeight: 35,
+        textAlign: 'center',
+        paddingHorizontal: 10,
+    },
+    todoContentViewBox: {
+        flex: 1
+    },
+    todoContent: {
+        flex: 1,
+        flexWrap: 'nowrap'
+    },
+    todoContentText: {
+        overflow: 'hidden',
+        lineHeight: 35,
+        fontSize: _Font_Sizes.normal
     }
 })
 
