@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ASK_STE, ASK_TODO_DATA, DAY } from 'constants/app.constants';
-import { STEDaysNumerics } from 'types/app.types';
 import { TODO, TODOData, TODOExpiryStatusCode } from 'types/data.types';
 
 export const getTODOData = async (): Promise<TODOData> => {

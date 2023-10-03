@@ -50,11 +50,11 @@ export const BottomTabsNavigator = () => {
                 }}
             />
             <Tabs.Screen
-                name="todos/index"
+                name="tasks/index"
                 options={{
                     title: "Active Tasks",
                     href: {
-                        pathname: "/todos",
+                        pathname: "/tasks",
                     },
                 }}
             />

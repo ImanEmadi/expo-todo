@@ -4,6 +4,7 @@ import { StyleSheet } from "react-native";
 export const _Font_Sizes = {
     h3: 25,
     h4: 23,
+    h5: 21,
     headerBtn: 20,
     cardTitle: 18,
     normal: 15,
