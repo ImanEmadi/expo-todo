@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ASK_TODO_DATA, DAY } from 'constants/app.constants';
+import { ASK_STE, ASK_TODO_DATA, DAY } from 'constants/app.constants';
+import { STEDaysNumerics } from 'types/app.types';
 import { TODO, TODOData, TODOExpiryStatusCode } from 'types/data.types';
 
 export const getTODOData = async (): Promise<TODOData> => {
@@ -33,14 +34,16 @@ const resetTODOData = () => {
     AsyncStorage.setItem(ASK_TODO_DATA, '[]'); // resetting data
 }
 
+export const readSTEValueFromStorage = async (): Promise<number> => {
+    const ste_value = await AsyncStorage.getItem(ASK_STE);
+    return ste_value ? parseInt(ste_value) : 1;
+}
 
-export const getTodoExpiryStatusCode = (expiry: number): TODOExpiryStatusCode => {
-
+export const getTodoExpiryStatusCode = (expiry: number, ste: number): TODOExpiryStatusCode => {
     const diff = expiry - Date.now();
     switch (true) {
         case diff < 0: return 0;
-        //TODO: add dynamic setting feature. user can choose "when it's soon to expire!"
-        case diff < DAY: return 1;
+        case diff < ste * DAY: return 1;
         default:
             return 2;
     }

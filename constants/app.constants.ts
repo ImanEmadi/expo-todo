@@ -19,7 +19,7 @@ export const PATH_ALL_TODOS = '/';
 
 export const ASK_APP_THEME = 'theme';
 export const ASK_TODO_DATA = 'todo_data';
-
+export const ASK_STE = 'STE_VALUE';
 
 //** VALUES */
 

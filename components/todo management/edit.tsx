@@ -1,10 +1,10 @@
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
-import { getTODObyID, getTodoExpiryStatus, getTodoExpiryStatusCode } from "helpers/todo.utils";
+import { getTODObyID, getTodoExpiryStatus, getTodoExpiryStatusCode, readSTEValueFromStorage } from "helpers/todo.utils";
 import { useTheme } from "hooks/useTheme";
-import { useCallback, useMemo, useState } from "react";
-import { View, Text, StyleSheet, useWindowDimensions, TextStyle, StyleProp } from "react-native";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { View, Text, StyleSheet, useWindowDimensions, TextStyle } from "react-native";
 import { _Font_Sizes } from "resources/styles/global.styles";
-import { TODO } from "types/data.types";
+import { TODO, TODOExpiryStatusCode } from "types/data.types";
 import { NoTODO } from "./no-todo";
 import { Image } from "expo-image";
 import { ScrollView } from "react-native-gesture-handler";
@@ -19,7 +19,15 @@ export const EditTODO = () => {
     const { todo: todoID } = useLocalSearchParams();
     const [todo, setTodo] = useState<TODO | null>(null);
 
-    const statusCode = useMemo(() => getTodoExpiryStatusCode(todo?.expires ?? 0), [getTodoExpiryStatusCode, todo]);
+    const [statusCode, setStatusCode] = useState<TODOExpiryStatusCode>(0)
+
+    useEffect(() => {
+        if (todo)
+            readSTEValueFromStorage().then(ste => {
+                setStatusCode(getTodoExpiryStatusCode(todo.expires, ste))
+            })
+    }, [todo]);
+
     const [, , fc] = useTODOStatusColor(statusCode);
 
     const focusEffect = useCallback(() => {
@@ -46,7 +54,7 @@ export const EditTODO = () => {
                         <TODOLabel label="Id: " />
                         <TODOValue value={todo.id} />
                         <TODOLabel label="Status :" />
-                        <TODOValue color={fc} value={getTodoExpiryStatus(getTodoExpiryStatusCode(todo.expires))} />
+                        <TODOValue color={fc} value={getTodoExpiryStatus(statusCode)} />
                         <TODOLabel label="Expiry :" />
                         <TODOValue color={fc} value={(new Date(todo.expires).toString().split('GMT')[0])} />
                         <TODOLabel label="Auto delete :" />

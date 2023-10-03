@@ -1,12 +1,13 @@
 import { PATH_EDIT_TODO } from "constants/app.constants";
 import { useFocusEffect, useRouter } from "expo-router";
-import { deleteExpiredTODOs, getTODOData, getTodoExpiryStatus, getTodoExpiryStatusCode } from "helpers/todo.utils";
+import { deleteExpiredTODOs, getTODOData, getTodoExpiryStatus, getTodoExpiryStatusCode, readSTEValueFromStorage } from "helpers/todo.utils";
 import { useTODOStatusColor } from "hooks/useTODOStatusColor";
 import { useTheme } from "hooks/useTheme";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { _Font_Sizes } from "resources/styles/global.styles";
-import { TODO } from "types/data.types";
+import { STEDaysNumerics } from "types/app.types";
+import { TODO, TODOExpiryStatusCode } from "types/data.types";
 
 export const TODOs = () => {
 
@@ -15,14 +16,15 @@ export const TODOs = () => {
     //TODO: Display how many todo are there in total.
     useFocusEffect(useCallback(() => {
         deleteExpiredTODOs().then(() => { // deleting expired TODOs with `autoDel` property set to `true`
-            getTODOData().then(d => { // fetching remaining TODOs
+            getTODOData().then(async d => { // fetching remaining TODOs
+                const ste = await readSTEValueFromStorage()
                 const sortedData = d.sort((b, a) => b.expires - a.expires);
                 setTodoData([
                     //TODO: add dynamic setting feature. user can choose "how many todo of each status can be displayed in home page"
                     //? Refactoring postponed until `setting` screen is implemented.
-                    ...sortedData.filter(t => getTodoExpiryStatusCode(t.expires) === 0).slice(0, 3),
-                    ...sortedData.filter(t => getTodoExpiryStatusCode(t.expires) === 1).slice(0, 3),
-                    ...sortedData.filter(t => getTodoExpiryStatusCode(t.expires) === 2).slice(0, 3),
+                    ...sortedData.filter(t => getTodoExpiryStatusCode(t.expires, ste) === 0).slice(0, 3),
+                    ...sortedData.filter(t => getTodoExpiryStatusCode(t.expires, ste) === 1).slice(0, 3),
+                    ...sortedData.filter(t => getTodoExpiryStatusCode(t.expires, ste) === 2).slice(0, 3),
                 ]);
             });
         });
@@ -36,9 +38,17 @@ export const TODOs = () => {
 const RenderItem = ({ item: { title, description, expires, autoDel, id } }: { item: TODO }) => {
 
     const router = useRouter();
-    const statusCode = useMemo(() => getTodoExpiryStatusCode(expires), [getTodoExpiryStatusCode, expires]);
     const themeMap = useTheme();
+    const [ste, setSTE] = useState<STEDaysNumerics>(1);
+    const statusCode = useMemo(() => getTodoExpiryStatusCode(expires, ste), [ste, expires]);
     const [bgActive, , fc] = useTODOStatusColor(statusCode);
+
+
+    useFocusEffect(useCallback(() => {
+        readSTEValueFromStorage().then(_ste => {
+            setSTE(_ste as STEDaysNumerics);
+        })
+    }, []))
 
     return (
         <>
