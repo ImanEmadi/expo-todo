@@ -49,11 +49,54 @@ export const darkTheme = {
     bottomTabBorder: '#9494a6'
 }
 
-/**
- * mocked
- *TODO: define light theme colors
- */
-export const lightTheme = darkTheme;
+export const lightTheme = {
+    bodyBG: '#f2f2f2',
+    bodyBGShade: '#e6e6e6',
+    bodyBGShadeActive: '#d9d9d9',
+    bodyBGTint: '#ffffff',
+    bodyFC: '#000',
+    bodyFCLightBlue: '#0095e6',
+    bodyHeaderFC: '#0077b6',
+    formBG: '#e6f7ff',
+    formBGShade: '#ccefff',
+    formBGTint: '#ffffff',
+    formInputBorder: '#000',
+    formInputFC: '#111',
+    formInputFCPlaceHolder: '#404040',
+    bodyGreen: '#46a04a',
+    bodyGreenFade: 'rgba(70, 160, 74,0.4)',
+    bodyGreenShade: '#3e8e42',
+    bodyGreenTint: '#4eb153',
+    bodyGreenContrast: '#333333',
+    bodyOrange: '#cc7a00',
+    bodyOrangeFade: 'rgba(255, 152, 0, 0.4)',
+    bodyOrangeShade: '#b36b00',
+    bodyOrangeTint: '#e68a00',
+    bodyOrangeContrast: '#333333',
+    bodyRed: '#da190b',
+    bodyRedFade: 'rgba(244, 67, 54, 0.4)',
+    bodyRedShade: '#c2160a',
+    bodyRedTint: '#f21c0d',
+    bodyRedContrast: '#333333',
+    bodyBlue: '#0d8bf2',
+    bodyBlueFade: 'rgba(33, 150, 243, 0.4)',
+    bodyBlueShade: '#0b7dda',
+    bodyBlueTint: '#2597f4',
+    bodyBlueContrast: '#333333',
+    headerBorder: '#d3d3d3',
+    headerBG: '#ffffff',
+    headerBGShade: '#f5f5f5',
+    headerBGTint: '#f0f0f0',
+    headerBGActive: 'rgba(63, 97, 115, 0.2)',
+    headerFC: '#333333',
+    headerFCSecondary: '#666666',
+    bottomTabBG: '#ffffff',
+    bottomTabBGShade: '#f5f5f5',
+    bottomTabBGTint: '#f0f0f0',
+    bottomTabActiveTint: '#0077b6',
+    bottomTabInactiveTint: '#666666',
+    bottomTabBorder: '#d3d3d3',
+};
 
 export const loadTheme = (theme: AppTheme): ThemeMap => {
     switch (theme) {

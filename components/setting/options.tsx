@@ -29,7 +29,7 @@ const soonToExpireOptions: RNPickerItem<STEDaysNumerics>[] = [
 
 export const SettingOptions = () => {
 
-    const themeMap = useTheme();
+    // const themeMap = useTheme();
     const [selectedTheme, setSelectedTheme] = useState<AppTheme>();
     const [selectedSTE, setSelectedSTE] = useState<STEDaysNumerics>();
     const { theme, setTheme } = useAppStore(s => s);
@@ -52,6 +52,12 @@ export const SettingOptions = () => {
             setSelectedSTE(ste as STEDaysNumerics);
         })
     }, []))
+
+    useFocusEffect(useCallback(() => {
+        //? sets the current value of appTheme in the picker
+        if (theme)
+            setSelectedTheme(theme);
+    }, [theme]));
 
     return <>
         <View style={{ ...styles.settingBox }}>

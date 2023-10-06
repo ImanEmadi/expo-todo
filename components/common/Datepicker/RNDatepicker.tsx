@@ -42,7 +42,6 @@ export const RNDTPicker = ({
     const [value_time, setValue_time] = useState<string>('00:00:00');
     const [showDP, setShowDP] = useState<boolean>(false);
     const [selectedDateTime, setSelectedDateTime] = useState<Date>();
-
     const _pressableStyle = useMemo(() => Object.assign({ ...styles.modeBtn }, pressAblesStyle), [pressAblesStyle]);
     const _pressableTextsStyle = useMemo(() => Object.assign({ ...styles.modeBtnText }, pressAbleTextsStyle), [pressAbleTextsStyle]);
     const _displayTextStyle = useMemo(() => Object.assign({ ...styles.displayText }, displayDateStyle), [displayDateStyle]);

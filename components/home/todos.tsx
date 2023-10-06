@@ -63,7 +63,6 @@ const RenderItem = ({ item: { title, description, expires, autoDel, id } }: { it
                 {/* Status Box */}
                 <View style={{
                     ...styles.todoStatusView,
-
                 }}>
                     <View style={{ ...styles.todoStatusInnerView, backgroundColor: bgActive }}>
                         <Text style={{ ...styles.todoStatusText, color: fc }}>

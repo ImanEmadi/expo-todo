@@ -1,5 +1,5 @@
 import { useTheme } from "hooks/useTheme";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { View, StyleSheet, Text, ScrollView, Pressable, useWindowDimensions } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { _Font_Sizes } from "resources/styles/global.styles";
@@ -151,6 +151,8 @@ export const NewTodo = () => {
             textColor: themeMap.bodyGreenContrast,
             backgroundColor: themeMap.bodyGreenShade
         });
+
+        setAssets([]);
     }, [assets, addToAlbum, textData, expiryDate, autoDel, themeMap])
 
     return (
