@@ -14,9 +14,7 @@ export const ActiveTasks = () => {
     useFocusEffect(useCallback(() => {
         const now = Date.now();
         getTODOData()
-            .then(data => data.filter(_d => _d.expires > now))
-            .then(data => data.sort((a, b) => a.expires - b.expires))
-            .then(setTODOs);
+            .then(data => setTODOs(data.filter(_d => _d.expires > now).sort((a, b) => a.expires - b.expires)))
     }, []));
 
     return <>
