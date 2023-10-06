@@ -1,18 +1,19 @@
 {
-  "name": "todo",
-  "slug": "todo",
+  "name": "todo-app",
+  "description": "A sample TODO app, written with Expo and React-Native.",
+  "slug": "todo-app",
   "version": "1.0.0",
   "orientation": "portrait",
   "icon": "./assets/icon.png",
   "userInterfaceStyle": "dark",
   "scheme": "todo",
+  "privacy": "public",
+  "githubUrl": "https://github.com/ImanEmadi/expo-todo",
+  "runtimeVersion": {
+    "policy": "nativeVersion"
+  },
   "experiments": {
     "tsconfigPaths": true
-  },
-  "extra": {
-    "eas": {
-      "projectId": "683c40ee-d7c2-456e-a350-2ff17911c57b"
-    }
   },
   "plugins": [
     "expo-router",
@@ -53,5 +54,13 @@
   },
   "web": {
     "favicon": "./assets/favicon.png"
+  },
+  "extra": {
+    "router": {
+      "origin": false
+    },
+    "eas": {
+      "projectId": "317f3d80-be0d-4c63-b5d3-e421768228b4"
+    }
   }
 }

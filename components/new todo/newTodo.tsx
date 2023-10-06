@@ -91,10 +91,18 @@ export const NewTodo = () => {
         const { title, description } = textData;
 
         if (!title.length || !description.length)
-            return alert("Inputs can not be empty");
+            return Toast.show("Inputs can not be empty", {
+                ...DEFAULT_TOAST_OPTIONS,
+                backgroundColor: themeMap.bodyRedFade,
+                textColor: themeMap.bodyRedContrast
+            });
 
         if (!expiryDate)
-            return alert("Please choose an expiry date.");
+            return Toast.show("Please choose an expiry date.", {
+                ...DEFAULT_TOAST_OPTIONS,
+                backgroundColor: themeMap.bodyRedFade,
+                textColor: themeMap.bodyRedContrast
+            });
 
         if (assets.length) {
             try {
