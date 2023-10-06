@@ -35,7 +35,6 @@ yarn-error.*
 *.tsbuildinfo
 
 # customs
-yarn.lock
 android
 .vscode
 .git
