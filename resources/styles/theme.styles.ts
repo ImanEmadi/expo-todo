@@ -97,11 +97,3 @@ export const lightTheme = {
     bottomTabInactiveTint: '#666666',
     bottomTabBorder: '#d3d3d3',
 };
-
-export const loadTheme = (theme: AppTheme): ThemeMap => {
-    switch (theme) {
-        case 'dark':
-        default:
-            return darkTheme;
-    }
-}
